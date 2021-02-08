@@ -19,7 +19,7 @@ before_install:
   - luarocks install --local lpeg
   - "`luarocks path`" # execute the luarocks output - sets the paths for 'local' tree
   - sudo luarocks install busted
-  - ./busted tests/busted-test.lua
+  - busted tests/busted-test.lua
 
 
 script: 
