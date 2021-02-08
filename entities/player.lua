@@ -87,8 +87,9 @@ function Player:update(dt)
     end
 
     
-    self.world:move(self, self:getX(), self:getY())
     self.coord:moveForward(self.current_speed * dt)
+    local actualX, actualY, cols, len = self.world:move(self, self:getX(), self:getY())
+    self:setXY(actualX, actualY)
     self.pSystem:update(dt)
     self.pSystem:moveTo(self.coord.x, self.coord.y)
 
