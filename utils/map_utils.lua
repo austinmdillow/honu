@@ -34,5 +34,6 @@ function verifyMap(map)
     assert(spawn.y)
     assert(spawn.properties.delay)
     assert(spawn.properties.type)
+    assert(spawn.z)
   end
 end
