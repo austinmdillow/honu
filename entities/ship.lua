@@ -5,7 +5,7 @@ local hitbox_debug = true
 function Ship:new(x_start, y_start)
     Ship.super.new(self, x_start, y_start, dir_start)
     self:setColor(COLORS.red)
-    self.max_speed = 100
+    self.max_speed = 55
     self.radius = 10
     self.current_speed = 0
     self.roation_speed = 3

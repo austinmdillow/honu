@@ -3,10 +3,10 @@ Player = Ship:extend()
 function Player:new(x_start, y_start)
   Player.super.new(self, x_start, y_start, dir_start)
   self:setColor(COLORS.red)
-  self.max_speed_base = 550
+  self.max_speed_base = 160
   self.max_speed = self.max_speed_base
-  self.cruise_speed = 250
-  self.min_speed = 50
+  self.cruise_speed = 100
+  self.min_speed = 75
   self.boost = 100
   self.max_boost = 400
   self.over_boosted = false
@@ -66,6 +66,7 @@ function Player:update(dt)
       self:damage(dt*20)
     end
 
+    -- Linear Speed
     if love.keyboard.isDown("up") and not self.over_boosted then
       self.boost = self.boost - 100*dt
       self.current_speed = math.min(self.current_speed + 500 * dt, self.max_speed)
@@ -74,6 +75,8 @@ function Player:update(dt)
     else 
       self.current_speed = math.max(self.current_speed - 200*dt, self.cruise_speed)
     end
+
+    -- Roation
     local rotation_speed_const = 1
     if love.keyboard.isDown("right") then
         self.coord:rotate(dt * (self.roation_speed + rotation_speed_const * (self.cruise_speed - self.current_speed) / self.cruise_speed))
@@ -81,18 +84,20 @@ function Player:update(dt)
         self.coord:rotate(-dt * (self.roation_speed + rotation_speed_const * (self.cruise_speed - self.current_speed) / self.cruise_speed))
     end
 
-
+    -- Recharge Shield
     if self.shield_enabled then
       self.shield_health = math.min(self.shield_max, self.shield_health + self.shield_recharge_rate * dt)
     end
 
-    
+    -- Final movement + bump
     self.coord:moveForward(self.current_speed * dt)
-    local actualX, actualY, cols, len = self.world:move(self, self:getX(), self:getY())
+    local actualX, actualY, cols, len = self.world:move(self, self:getX(), self:getY(), function() return "bounce"end)
+    print(actualX, actualY, cols, len)
     self:setXY(actualX, actualY)
+
+    -- particle System
     self.pSystem:update(dt)
     self.pSystem:moveTo(self.coord.x, self.coord.y)
-
     self.pSystem:setDirection(self.coord:getT() + math.pi)
 
     if love.keyboard.isDown("space") and self.equipped_weapon:is(Machinegun) then
