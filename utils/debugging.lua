@@ -6,7 +6,3 @@ function drawDebugInfo()
   love.graphics.print("FPS " .. fps, start_x, 5)
   love.graphics.print("Stats " .. collectgarbage("count"), start_x, 25)
 end
-
-function verifyMap(map)
-  assert(map.layers.spawn_layer)
-end

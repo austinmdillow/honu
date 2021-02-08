@@ -3,6 +3,7 @@ map_gameplay = {}
 
 function map_gameplay:enter()
     map_gameplay.level_map = Maps.test_map
+    map_gameplay.level_world = Bump.newWorld(32)
     verifyMap(map_gameplay.level_map)
     game_data.level_score = 0 --reset the score for this level
     game_data.level_kills = 0 -- not used
@@ -11,6 +12,7 @@ function map_gameplay:enter()
     game_data.enemy_list = {}
     game_data.item_list = {}
     game_data.local_player:setXYT(500, 500, 0)
+    setupMapPhysics(map_gameplay.level_map, map_gameplay.level_world)
     setupMapCallbacks(map_gameplay.level_map)
     map_gameplay.spawner = MapSpawner(Maps.test_map, game_data.current_level)
 end
@@ -57,10 +59,6 @@ function map_gameplay:draw()
     camera:attach()
     love.graphics.setColor(1,1,1, .7)
     love.graphics.draw(background)
-    local tx = camera.x - love.graphics.getWidth() / 2
-	local ty = camera.y - love.graphics.getHeight() / 2
-
-	map_gameplay.level_map:draw(-tx, -ty, camera.scale, camera.scale)
 
     screen:apply(dt)
 
@@ -83,6 +81,11 @@ function map_gameplay:draw()
     drawBoundaries()
 
     --map:draw()
+    local tx = camera.x - love.graphics.getWidth() / 2
+	local ty = camera.y - love.graphics.getHeight() / 2
+
+	map_gameplay.level_map:draw(-tx, -ty, camera.scale, camera.scale)
+    --map_gameplay.level_map:bump_draw(map_gameplay.level_world)
     camera:detach()
     
 

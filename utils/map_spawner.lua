@@ -117,9 +117,9 @@ end
 function MapSpawner:spawnFromMap()
   print("printing spwan Layers")
   for _, spawn_point in pairs(self.map.layers.spawn_layer.objects) do
-    print(_, spawn_point, spawn_point.x)
+    print(_, spawn_point, spawn_point.x, spawn_point.y)
 
-    if self.map_time > spawn.delay then
+    if self.map_time > spawn_point.properties.delay then
       self:spawnEnemyFromPoint(spawn_point, self.map.layers.sprite_layer.objects)
     end
   end

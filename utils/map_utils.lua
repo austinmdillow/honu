@@ -18,8 +18,15 @@ function setupMapCallbacks(map, world)
 end
 
 
+function setupMapPhysics(map, world)
+  map:bump_init(world)
+end
 
+
+-- verify that the map is structured the way we expect it to be
 function verifyMap(map)
+
+  --verify the structure and contents of the spawn_layer
   assert(map.layers.spawn_layer)
   for key, spawn in pairs(map.layers.spawn_layer.objects) do
     print(spawn.x, spawn.y)

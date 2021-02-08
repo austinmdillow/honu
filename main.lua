@@ -12,6 +12,7 @@ lovebird = require "lib.mylove.lovebird"
 Timer = require "lib.hump.timer"
 reflowprint = require "lib.reflowprint.init"
 Sti = require "lib.sti"
+Bump = require 'lib.bump.bump'
 
 require "lib.mylove.colors"
 require "lib.mylove.intersections"
