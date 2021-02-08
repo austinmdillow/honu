@@ -1,0 +1,49 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "test_map.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "/home/austin/Github/mini-games/shipgame/assets/maps/test_map.tmx": {
+            "scale": 0.7197,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 714.8812005002084,
+                "y": 505.0715575934417
+            }
+        },
+        "/home/austin/Github/mini-games/shipgame/assets/maps/tilesets/Map_tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "test_map.tmx": {
+            "scale": 0.7197,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 553.7029317771294,
+                "y": 713.4917326663888
+            }
+        },
+        "tilesets/Map_tiles.tsx": {
+            "scaleInDock": 1
+        }
+    },
+    "map.lastUsedExportFilter": "Lua files (*.lua)",
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": null,
+    "openFiles": [
+        "test_map.tmx"
+    ],
+    "project": "honu.tiled-project",
+    "property.type": "int",
+    "recentFiles": [
+        "test_map.tmx",
+        "/home/austin/Github/mini-games/shipgame/assets/maps/tilesets/Map_tiles.tsx",
+        "/home/austin/Github/mini-games/shipgame/assets/maps/test_map.tmx"
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx"
+}

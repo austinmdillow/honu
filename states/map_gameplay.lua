@@ -1,8 +1,9 @@
 map_gameplay = {}
 
-map = Sti("assets/maps/test_map.lua")
 
-function gameplay:enter()
+function map_gameplay:enter()
+    map_gameplay.level_map = Maps.test_map
+    verifyMap(map_gameplay.level_map)
     game_data.level_score = 0 --reset the score for this level
     game_data.level_kills = 0 -- not used
     game_data.local_player:reset() -- give the player back their health
@@ -10,10 +11,10 @@ function gameplay:enter()
     game_data.enemy_list = {}
     game_data.item_list = {}
     game_data.local_player:setXYT(500, 500, 0)
-    gameplay.spawner = Spawner(game_data.current_level, map)
+    map_gameplay.spawner = MapSpawner(Maps.test_map, game_data.current_level)
 end
 
-function gameplay:update(dt)
+function map_gameplay:update(dt)
 
     --lovebird.update()
     screen:update(dt)
@@ -43,22 +44,26 @@ function gameplay:update(dt)
 
         -- updatee other odds and ends
         checkCollisions()
-        gameplay.spawner:update(dt)
+        map_gameplay.spawner:update(dt)
         updateHud(dt)
         checkEndLevel(1)
     end
 
 end
 
+function map_gameplay.level_map.layers.sprite_layer:draw()
+    print("woooo")
+end
+
 -- Drawing time
-function gameplay:draw()
+function map_gameplay:draw()
     camera:attach()
     love.graphics.setColor(1,1,1, .7)
     love.graphics.draw(background)
     local tx = camera.x - love.graphics.getWidth() / 2
 	local ty = camera.y - love.graphics.getHeight() / 2
 
-	map:draw(-tx, -ty, camera.scale, camera.scale)
+	map_gameplay.level_map:draw(-tx, -ty, camera.scale, camera.scale)
 
     screen:apply(dt)
 
@@ -96,7 +101,7 @@ function gameplay:draw()
 
 end
 
-function gameplay:keypressed(key)
+function map_gameplay:keypressed(key)
     if key == "e" then
         game_data.current_enemy_number = game_data.current_enemy_number + 1
         --table.insert(game_data.enemy_list, game_data.current_enemy_number, Enemy(500,500))
@@ -150,7 +155,7 @@ function checkEndLevel(level_number)
         Gamestate.switch(death_screen)
     end
 
-    if gameplay.spawner:completed() then
+    if map_gameplay.spawner:completed() then
         if save_data.level_stats[game_data.current_level] == nil then -- create a new entry to save level data
             save_data.level_stats[game_data.current_level] = {}
         end
@@ -174,7 +179,7 @@ function checkCollisions()
             if game_data.local_player.coord:distanceToPoint(bullet_x, bullet_y) < game_data.local_player.hitbox + bullet.size then
                 game_data.local_player:damage(bullet.damage)
                 screen:shake(20)
-                sounds.hit_1:play()
+                Sounds.hit_1:play()
                 game_data.bullet_list[idx_bullet] = nil
             end 
         end
@@ -184,7 +189,7 @@ function checkCollisions()
             -- there was a hit
             if enemy.team ~= bullet.team and enemy.coord:distanceToPoint(bullet_x, bullet_y) < enemy.hitbox + bullet.size then
                 game_data.bullet_list[idx_bullet] = nil
-                sounds.hit_2:clone():play()
+                Sounds.hit_2:clone():play()
                 if enemy:damage(bullet.damage) then -- the bullet killed the enemy
                     game_data.enemy_list[idx] = nil
                     screen:shake(50)

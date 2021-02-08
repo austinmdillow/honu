@@ -38,6 +38,7 @@ require "utils.serverCallbacks"
 require "utils.debugging"
 require "utils.hud"
 require "utils.spawner"
+require "utils.map_spawner"
 require "utils.upgrade_node"
 require "utils.upgrade_manager"
 require "utils.interractions"
@@ -48,6 +49,7 @@ require "assets.resources"
 -- all gamestates
 local main_menu = require("states.main_menu")
 local gameplay = require("states.gameplay")
+local map_gameplay = require("states.map_gameplay")
 local death_screen = require("states.death_screen")
 local upgrade_menu = require("states.upgrade_menu")
 local level_menu = require("states.level_menu")

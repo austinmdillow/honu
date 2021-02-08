@@ -8,7 +8,7 @@ function Item:new(x_start, y_start)
   else
     self.coord = Coord(x_start, y_start, t_start)
   end
-  self.image = sprites.coin_image -- default image for an item
+  self.image = Sprites.coin_image -- default image for an item
   assert(self.image ~= nil, "Item image is nil")
   self.isGarbage = false -- if true, it will be garbage collected in the map
   self.drop_time = love.timer.getTime()

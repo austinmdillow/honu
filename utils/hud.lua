@@ -101,7 +101,7 @@ end
 
 
 function drawLevelInfo()
-  local level_num = gameplay.spawner:getWave()
+  local level_num = map_gameplay.spawner:getWave()
   if level_num ~= nil then
     love.graphics.print(level_num, FRAME_WIDTH / 2, 10)
   end

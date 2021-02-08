@@ -12,7 +12,7 @@ local text_show_time = 3 -- how long text should be displayed for
 -- Start Game
 local function startGame()
   main_menu:setText("Start Game was selected!")
-  Gamestate.switch(gameplay)
+  Gamestate.switch(map_gameplay)
 end
 
 local function levelSelect()

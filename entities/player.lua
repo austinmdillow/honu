@@ -24,7 +24,7 @@ function Player:new(x_start, y_start)
   self.invincible = false
   
 
-  self.sprite_image = sprites.player_image
+  self.sprite_image = Sprites.player_image
   self.timer = Timer.new() -- not sure if this is used
   self.damage_color = {1,0,0,0} -- not used
   

@@ -15,7 +15,7 @@ end
 
 
 function after_action:draw()
-  love.graphics.setFont(arcade_font)
+  love.graphics.setFont(Fonts.arcade_font)
   reflowprint(after_action.write_time / after_action.line1_write_time - 1 , after_action.line1, 100, 100, 500, 200, 1, 1)
   reflowprint(after_action.write_time / after_action.line2_write_time - 2, after_action.line2, 100, 300, 500, 200, 1, 1)
   reflowprint(after_action.write_time / after_action.line3_write_time, after_action.line3, 100, 500, 500, 200, 1, 1)

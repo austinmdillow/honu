@@ -15,7 +15,7 @@ function Ship:new(x_start, y_start)
   self.hitbox = self.size * 2
   self.sprite_image = nil
   self.equipped_weapon = Gun()
-  self.pSystem = love.graphics.newParticleSystem(sprites.particle_image, 255)
+  self.pSystem = love.graphics.newParticleSystem(Sprites.particle_image, 255)
   self:setupParticleSystem()
 
 end
@@ -98,4 +98,8 @@ end
 
 function Ship:getSpeed()
   return self.current_speed
+end
+
+function Ship:__tostring()
+  return "Ship:" .. self.id .. ", pos: " .. self.coord:getX() .. ", " .. self.coord:getY()
 end
