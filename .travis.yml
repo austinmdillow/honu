@@ -18,8 +18,8 @@ addons:
 before_install:
   - luarocks install --local lpeg
   - "`luarocks path`" # execute the luarocks output - sets the paths for 'local' tree
-  - luarocks install --local busted
-  - busted tests/busted-test.lua
+  - luarocks install busted
+  - ./busted tests/busted-test.lua
 
 
 script: 
