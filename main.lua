@@ -40,6 +40,7 @@ require "utils.hud"
 require "utils.spawner"
 require "utils.upgrade_node"
 require "utils.upgrade_manager"
+require "utils.interractions"
 
 
 require "assets.resources"
