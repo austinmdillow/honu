@@ -456,8 +456,10 @@
   </object>
   <object id="20" x="11.1157" y="12.5052">
    <properties>
+    <property name="active" type="bool" value="true"/>
     <property name="delay" type="float" value="20"/>
     <property name="distance" type="float" value="0"/>
+    <property name="period" value="3"/>
     <property name="quantity" type="int" value="4"/>
     <property name="trigger" value=""/>
     <property name="type" value="enemy"/>

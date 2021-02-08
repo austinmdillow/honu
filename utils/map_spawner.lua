@@ -117,11 +117,10 @@ end
 function MapSpawner:spawnFromMap()
   print("printing spwan Layers")
   for _, spawn_point in pairs(self.map.layers.spawn_layer.objects) do
-    print(_, spwan_point, spawn_point.x)
-    self:spawnEnemyFromPoint(spawn_point, self.map.layers.sprite_layer.objects)
-    print("Enemy layer")
-    for k, v in pairs(self.map.layers.sprite_layer.objects) do
-      print(k, v)
+    print(_, spawn_point, spawn_point.x)
+
+    if self.map_time > spawn.delay then
+      self:spawnEnemyFromPoint(spawn_point, self.map.layers.sprite_layer.objects)
     end
   end
 end
@@ -154,7 +153,8 @@ function MapSpawner:getWave()
 end
 
 function MapSpawner:completed()
-  return self.sequence == nil
+  return false -- TODO always returns false
+  --return self.sequence == nil
 end
 
 function MapSpawner:getLevel()

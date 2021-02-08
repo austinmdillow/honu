@@ -11,6 +11,7 @@ function map_gameplay:enter()
     game_data.enemy_list = {}
     game_data.item_list = {}
     game_data.local_player:setXYT(500, 500, 0)
+    setupMapCallbacks(map_gameplay.level_map)
     map_gameplay.spawner = MapSpawner(Maps.test_map, game_data.current_level)
 end
 
@@ -49,10 +50,6 @@ function map_gameplay:update(dt)
         checkEndLevel(1)
     end
 
-end
-
-function map_gameplay.level_map.layers.sprite_layer:draw()
-    print("woooo")
 end
 
 -- Drawing time

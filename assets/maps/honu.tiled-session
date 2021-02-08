@@ -23,8 +23,8 @@
             "scale": 0.7197,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 553.7029317771294,
-                "y": 713.4917326663888
+                "x": 417.53508406280395,
+                "y": 385.57732388495214
             }
         },
         "tilesets/Map_tiles.tsx": {
@@ -38,7 +38,7 @@
         "test_map.tmx"
     ],
     "project": "honu.tiled-project",
-    "property.type": "int",
+    "property.type": "bool",
     "recentFiles": [
         "test_map.tmx",
         "/home/austin/Github/mini-games/shipgame/assets/maps/tilesets/Map_tiles.tsx",

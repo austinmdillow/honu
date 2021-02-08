@@ -625,8 +625,10 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["active"] = true,
             ["delay"] = 20,
             ["distance"] = 0,
+            ["period"] = "3",
             ["quantity"] = 4,
             ["trigger"] = "",
             ["type"] = "enemy"
