@@ -467,7 +467,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="triggers">
+ <objectgroup id="5" name="triggers" visible="0">
   <object id="8" x="266.778" y="326.525" width="760.039" height="429.346"/>
  </objectgroup>
 </map>

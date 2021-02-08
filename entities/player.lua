@@ -13,7 +13,7 @@ function Player:new(x_start, y_start)
   self.radius = 10
   self.current_speed = 0
   self.roation_speed = 3
-  self.size = 5
+  self.size = 20
   self.team = Teams.blue
   self.shield_enabled = true
   self.shield_health = 100
@@ -39,6 +39,11 @@ end
 function Player:shrink() -- not used
   print("in shrink")
       self.timer:tween(1, self.damage_color, {1, 0, 0, 0}, 'in-out-quad')
+end
+
+function Player:setupBump(world)
+  self.world = world
+  world:add(self, self:getX(), self:getY(), self.size, self.size)
 end
 
 -- called before the player starts a new level and such
@@ -82,7 +87,7 @@ function Player:update(dt)
     end
 
     
-
+    self.world:move(self, self:getX(), self:getY())
     self.coord:moveForward(self.current_speed * dt)
     self.pSystem:update(dt)
     self.pSystem:moveTo(self.coord.x, self.coord.y)
