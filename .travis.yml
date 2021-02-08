@@ -7,7 +7,7 @@ install:
   - sudo apt-get install python-virtualenv lua5.1 -y
   - sudo add-apt-repository -y ppa:bartbes/love-stable
   - sudo apt-get update -y
-  - sudo apt-get install -y love=0.11.3
+  #- sudo apt-get install -y love=0.11.3
   - mkdir -p $TRAVIS_BUILD_DIR/share/love/
 addons:
   apt:
@@ -18,6 +18,8 @@ addons:
 before_install:
   - luarocks install --local lpeg
   - "`luarocks path`" # execute the luarocks output - sets the paths for 'local' tree
+  - luarocks install busted
+  - busted
 
 
 script: 
