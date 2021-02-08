@@ -2,6 +2,7 @@ map_gameplay = {}
 
 
 function map_gameplay:enter()
+    -- TODO reload the entire map when we re-enter the world
     map_gameplay.level_map = Maps.test_map
     map_gameplay.level_world = Bump.newWorld(32)
     verifyMap(map_gameplay.level_map)
@@ -13,14 +14,17 @@ function map_gameplay:enter()
     game_data.item_list = {}
     game_data.local_player:setXYT(500, 500, 0)
     setupMapPhysics(map_gameplay.level_map, map_gameplay.level_world)
+    
     setupMapCallbacks(map_gameplay.level_map)
     map_gameplay.spawner = MapSpawner(Maps.test_map, game_data.current_level)
+    game_data.local_player:setupBump(map_gameplay.level_world)
 end
 
 function map_gameplay:update(dt)
 
     --lovebird.update()
     screen:update(dt)
+    map_gameplay.level_map:update(dt)
 
     if (not game_data.gameplay_paused) then
         game_data.local_player:update(dt)
@@ -83,10 +87,11 @@ function map_gameplay:draw()
     --map:draw()
     local tx = camera.x - love.graphics.getWidth() / 2
 	local ty = camera.y - love.graphics.getHeight() / 2
-
-	map_gameplay.level_map:draw(-tx, -ty, camera.scale, camera.scale)
-    --map_gameplay.level_map:bump_draw(map_gameplay.level_world)
     camera:detach()
+    map_gameplay.level_map:draw(-tx, -ty, camera.scale, camera.scale)
+    love.graphics.setColor(COLORS.red)
+    map_gameplay.level_map:bump_draw(-tx, -ty, camera.scale, camera.scale)
+    
     
 
     drawHUD()

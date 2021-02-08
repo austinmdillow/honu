@@ -22,6 +22,6 @@ Sounds.hit_2 = love.audio.newSource("assets/sounds/hit_2.wav", "static")
 
 -- Tile Maps
 Maps = {}
-Maps.test_map = Sti("assets/maps/test_map.lua", {"bump"})
+Maps.test_map = Sti("assets/maps/test_map.lua", {'bump'})
 
 ITEM_PIX_WIDTH = 32

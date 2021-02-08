@@ -6,7 +6,11 @@
     "activeFile": "test_map.tmx",
     "expandedProjectPaths": [
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
         "/home/austin/Github/mini-games/shipgame/assets/maps/test_map.tmx": {
             "scale": 0.7197,
             "selectedLayer": 2,
@@ -28,7 +32,8 @@
             }
         },
         "tilesets/Map_tiles.tsx": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
     "map.lastUsedExportFilter": "Lua files (*.lua)",
@@ -40,6 +45,7 @@
     "project": "honu.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "tilesets/Map_tiles.tsx",
         "test_map.tmx",
         "/home/austin/Github/mini-games/shipgame/assets/maps/tilesets/Map_tiles.tsx",
         "/home/austin/Github/mini-games/shipgame/assets/maps/test_map.tmx"
