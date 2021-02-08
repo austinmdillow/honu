@@ -25,10 +25,10 @@
         },
         "test_map.tmx": {
             "scale": 0.7197,
-            "selectedLayer": 7,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 417.53508406280395,
-                "y": 385.57732388495214
+                "x": 627.3447269695707,
+                "y": -385.5773238849521
             }
         },
         "tilesets/Map_tiles.tsx": {
@@ -40,7 +40,8 @@
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": null,
     "openFiles": [
-        "test_map.tmx"
+        "test_map.tmx",
+        "tilesets/Map_tiles.tsx"
     ],
     "project": "honu.tiled-project",
     "property.type": "bool",
