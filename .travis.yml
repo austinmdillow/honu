@@ -1,0 +1,16 @@
+language: shell
+os: linux
+dist: xenial
+install: true
+addons:
+  apt:
+    packages:
+    - lua5.1
+    - python2.7
+    - luarocks
+before_install:
+  - luarocks install --local lpeg
+  - "`luarocks path`" # execute the luarocks output - sets the paths for 'local' tree
+
+
+script: "[[ -n $TRAVIS_TAG ]] && ./build.sh web || ./build.sh" # web only for tags
