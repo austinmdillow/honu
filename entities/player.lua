@@ -91,8 +91,8 @@ function Player:update(dt)
 
     -- Final movement + bump
     self.coord:moveForward(self.current_speed * dt)
-    local actualX, actualY, cols, len = self.world:move(self, self:getX(), self:getY(), function() return "bounce"end)
-    self:setXY(actualX, actualY)
+    local actualX, actualY, cols, len = self.world:move(self, self:getX() - self.size / 2, self:getY() - self.size / 2, function() return "bounce"end)
+    self:setXY(actualX + self.size / 2, actualY + self.size / 2)
 
     -- particle System
     self.pSystem:update(dt)

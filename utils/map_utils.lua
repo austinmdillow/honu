@@ -12,37 +12,37 @@ function setupMapCallbacks(map, world)
   assert(map)
 
 
-  function map.layers.sprite_layer:draw()
-      for _, sprite in pairs(self.objects) do
-        sprite:draw()
-      end
-  end
-
-  function map.layers.sprite_layer:update(dt)
-    local sprite_count = 0
-    for _, sprite in pairs(self.objects) do
-      sprite:update(dt)
-      sprite_count = sprite_count + 1 -- count the number of enemies for debugging
-    end
-    game_data.sprites_alive = sprite_count -- update the number of enemies alive for debugging
-    --print("Avlice", game_data.sprites_alive)
-  end
-
-
-  function map.layers.bullet_layer:draw()
-      for _, bullet in pairs(self.objects) do
-        bullet:draw()
-      end
-  end
-
-  function map.layers.bullet_layer:update(dt)
-      for _, bullet in pairs(self.objects) do
-        bullet:update(dt)
-        if outOfBounds(bullet.coord) or bullet:dead() then
-          map.layers.bullet_layer.objects[_] = nil
+    function map.layers.sprite_layer:draw()
+        for _, sprite in pairs(self.objects) do
+            sprite:draw()
         end
-      end
-  end
+    end
+
+    function map.layers.sprite_layer:update(dt)
+        local sprite_count = 0
+        for _, sprite in pairs(self.objects) do
+            sprite:update(dt)
+            sprite_count = sprite_count + 1 -- count the number of enemies for debugging
+        end
+        game_data.sprites_alive = sprite_count -- update the number of enemies alive for debugging
+    end
+
+
+    function map.layers.bullet_layer:draw()
+        for _, bullet in pairs(self.objects) do
+            bullet:draw()
+        end
+    end
+
+    function map.layers.bullet_layer:update(dt)
+        for _, bullet in pairs(self.objects) do
+            bullet:update(dt)
+            if outOfBounds(bullet.coord) or bullet:isDead() then
+                bullet:cleanup()
+                map.layers.bullet_layer.objects[_] = nil
+            end
+        end
+    end
 end
 
 

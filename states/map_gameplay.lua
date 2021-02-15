@@ -3,9 +3,9 @@ map_gameplay = {}
 
 function map_gameplay:enter()
     -- TODO reload the entire map when we re-enter the world
-    map_gameplay.level_map = Maps.test_map
+    map_gameplay.level_map = Sti("assets/maps/test_map.lua", {'bump'})
     map_gameplay.level_world = Bump.newWorld(32)
-    verifyMap(map_gameplay.level_map)
+    setupMap(map_gameplay.level_map, map_gameplay.level_world)
     game_data.level_score = 0 --reset the score for this level
     game_data.level_kills = 0 -- not used
     game_data.player:reset() -- give the player back their health
@@ -15,9 +15,7 @@ function map_gameplay:enter()
     map_gameplay.events_list = {}
     game_data.player:setXYT(500, 500, 0) -- this should get replaced
 
-    setupMap(map_gameplay.level_map, map_gameplay.level_world)
-)
-    map_gameplay.spawner = MapSpawner(map_gameplay.level_map, game_data.current_level)
+    map_gameplay.spawner = MapSpawner(map_gameplay.level_map, map_gameplay.level_world, game_data.current_level)
     game_data.player:setupBump(map_gameplay.level_world)
     game_data.player:setupMap(map_gameplay.level_map)
 end
@@ -152,6 +150,10 @@ function map_gameplay:keypressed(key)
         Gamestate.switch(main_menu)
     end
 
+    if key == "]" then
+        game_data.player:setXYandBump(300,500)
+    end
+
     if key == "[" then
         for idx_item, item in pairs(game_data.item_list) do
             print(idx_item, item)
@@ -183,17 +185,33 @@ function checkMapCollisions()
     local start_time_col = love.timer.getTime()
     local num_checks = 0
     local bullet_list = map_gameplay.level_map.layers.bullet_layer.objects
+
+    local items_col, len = map_gameplay.level_world:getItems()
+    for ii, kk in pairs(items_col) do 
+        print(ii, kk)
+    end
     for idx_bullet, bullet in pairs(bullet_list) do
         local bullet_x, bullet_y = bullet:getXY()
+        -- for each collision that a bullet has
+        for idx_collisions, collision in pairs(bullet:getCollisions()) do
+            if collision.other.layer ~= nil then -- this means that we are colliding with an object from the tilemap
+                print("Tile colisions ", bullet)
+                bullet:cleanup() --remove the bullet from the bump world
+                bullet_list[idx_bullet] = nil -- remove the bullet from the list
+                break
+            end
+        end
 
         local entity_list = map_gameplay.level_map.layers.sprite_layer.objects
         for idx_entity, entity in pairs(entity_list) do
             num_checks = num_checks + 1
             -- there was a hit
-            print("collisions hit ", entity, bullet.team)
+            --print("collisions hit ", entity, bullet.team)
             if entity.team ~= bullet.team and entity.coord:distanceToPoint(bullet_x, bullet_y) < entity.hitbox + bullet.size then
+                bullet:cleanup() -- TODO: THIS CAN BREAK IF THE BULLET ALSO HITS A WALL
                 bullet_list[idx_bullet] = nil
                 -- there is a hit
+                print("Entity Collision ", bullet)
                 
                 Sounds.hit_2:clone():play()
 
@@ -202,6 +220,7 @@ function checkMapCollisions()
                         print("Platerere deado")
                     else
                         entity_list[idx_entity] = nil
+                        entity:cleanup()
                         screen:shake(50)
                         game_data.level_score = game_data.level_score + entity.difficulty
                         game_data.level_kills = game_data.level_kills + 1
@@ -210,6 +229,7 @@ function checkMapCollisions()
                 end
             end
         end
+        print("End of Check ", bullet)
 
     end
 

@@ -61,10 +61,11 @@ local spawn_sequences = {
   }
 }
 
-function MapSpawner:new(map, level)
+function MapSpawner:new(map, world, level)
   assert(map)
   assert(level)
   self.map = map
+  self.world = world
   self.current_level = level
   self.current_wave = 1
   assert(spawn_sequences[self.current_level].level == level)
@@ -90,6 +91,7 @@ function MapSpawner:spawnFromMap()
       print("spawning Player")
       table.insert(self.map.layers.sprite_layer.objects, game_data.player)
       game_data.player:setXY(spawn_point.x, spawn_point.y)
+
     elseif self.map_time > spawn_point.properties.delay then
       self:spawnEnemyFromPoint(spawn_point)
     end
@@ -114,6 +116,7 @@ function MapSpawner:spawnEnemyFromPoint(point)
 
   tmp_enemy.id = game_data.current_enemy_number
   tmp_enemy:setupMap(self.map)
+  tmp_enemy:setupBump(self.world)
   table.insert(self.map.layers.sprite_layer.objects, tmp_enemy)
   self.wave_spawns = self.wave_spawns + 1
   self.level_spawns = self.level_spawns + 1

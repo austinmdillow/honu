@@ -26,7 +26,10 @@ function Enemy:update(dt)
 
     
 
-    self:followCoord(dt, game_data.player.coord)
+    self:followCoord(dt, game_data.player.coord) -- try and move forward
+    -- see how that goes
+    local actualX, actualY, cols, len = self.world:move(self, self:getX(), self:getY(), function() return "bounce"end)
+    self:setXY(actualX, actualY) -- adjust accordingly
     if self:fire() then return "fire" end
 end
 
@@ -46,4 +49,7 @@ function Enemy:followCoord(dt, target_coord)
     end
     self:rateLimitedTurn(dt, angle_error + love.math.random()* 5 * math.pi / 180)
     self.coord:moveForward(self.max_speed * dt)
+    -- Final movement + bump
+    self.coord:moveForward(self.current_speed * dt)
+  
 end

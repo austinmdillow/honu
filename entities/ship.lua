@@ -18,7 +18,22 @@ function Ship:new(x_start, y_start)
     self.pSystem = love.graphics.newParticleSystem(Sprites.particle_image, 255)
     self:setupParticleSystem()
     self.id = math.floor(love.math.random(5000))
-    self.map = nil
+    self.map = nil -- Tiled tilemap
+    self.world = nil -- bump collision world
+end
+
+function Ship:setupBump(world)
+  self.world = world
+  world:add(self, self:getX(), self:getY(), self.size, self.size)
+end
+
+-- Let's the ship know what map it will be using (if any)
+function Ship:setupMap(map)
+  self.map = map
+end
+
+function Ship:clearMap()
+  self.map = nil
 end
 
 function Ship:update(dt)
@@ -29,12 +44,14 @@ function Ship:update(dt)
     self.pSystem:update(dt)
     self.pSystem:moveTo(self.coord.x, self.coord.y)
   end
+
+  
 end
 
 function Ship:draw()
   love.graphics.push() -- push 1
-  
   love.graphics.translate(self.coord.x, self.coord.y)
+
   love.graphics.rotate(self.coord:getT())
 
   if self.sprite_image ~= nil then
@@ -63,6 +80,8 @@ function Ship:fire()
   for idx, tmp_bullet in pairs(fire_result) do -- loop through the bullet list we get back (if there are multiple)
     tmp_bullet:setTeamAndSource(self.team, self)
     if self.map ~= nil then
+      tmp_bullet:setupBump(self.world)
+      print(self, tmp_bullet)
       table.insert(self.map.layers.bullet_layer.objects, tmp_bullet)
     else
       table.insert(game_data.bullet_list, tmp_bullet)
@@ -93,6 +112,12 @@ function Ship:dead()
   return self.current_health < 0
 end
 
+function Ship:cleanup()
+  if self.world ~= nil then
+    self.world:remove(self)
+  end
+end
+
 function Ship:setupParticleSystem()
   self.pSystem:setParticleLifetime(1, 2) -- Particles live at least 2s and at most 5s.
   self.pSystem:setEmissionRate(10)
@@ -111,11 +136,10 @@ function Ship:__tostring()
   return "Ship:" .. self.id .. ", pos: " .. self.coord:getX() .. ", " .. self.coord:getY()
 end
 
--- Let's the ship know what map it will be using (if any)
-function Ship:setupMap(map)
-  self.map = map
-end
-
-function Ship:clearMap()
-  self.map = nil
+function Ship:setXYandBump(x, y)
+  assert(self.world)
+  self:setXY(x, y)
+	self.coord.x = x
+  self.coord.y = y
+  self.world:update(self, x, y, self.size, self.size)
 end
