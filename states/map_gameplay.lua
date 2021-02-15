@@ -8,52 +8,43 @@ function map_gameplay:enter()
     verifyMap(map_gameplay.level_map)
     game_data.level_score = 0 --reset the score for this level
     game_data.level_kills = 0 -- not used
-    game_data.local_player:reset() -- give the player back their health
-    game_data.bullet_list = {} -- empty out the agents in the field
-    game_data.enemy_list = {}
+    game_data.player:reset() -- give the player back their health
+    --game_data.bullet_list = {} -- empty out the agents in the field
+    --game_data.enemy_list = {}
     game_data.item_list = {}
-    game_data.local_player:setXYT(500, 500, 0)
-    setupMapPhysics(map_gameplay.level_map, map_gameplay.level_world)
-    
-    setupMapCallbacks(map_gameplay.level_map)
-    map_gameplay.spawner = MapSpawner(Maps.test_map, game_data.current_level)
-    game_data.local_player:setupBump(map_gameplay.level_world)
+    map_gameplay.events_list = {}
+    game_data.player:setXYT(500, 500, 0) -- this should get replaced
+
+    setupMap(map_gameplay.level_map, map_gameplay.level_world)
+)
+    map_gameplay.spawner = MapSpawner(map_gameplay.level_map, game_data.current_level)
+    game_data.player:setupBump(map_gameplay.level_world)
+    game_data.player:setupMap(map_gameplay.level_map)
 end
 
 function map_gameplay:update(dt)
 
     --lovebird.update()
     screen:update(dt)
-    map_gameplay.level_map:update(dt)
+    
 
     if (not game_data.gameplay_paused) then
-        game_data.local_player:update(dt)
-        local dx,dy = game_data.local_player.coord.x - camera.x, game_data.local_player:getY() - camera.y
+        map_gameplay.level_map:update(dt)
+
+        local dx,dy = game_data.player.coord.x - camera.x, game_data.player:getY() - camera.y
         --camera:move(dx/2, dy/2)
-        camera:lockPosition(game_data.local_player.coord.x, game_data.local_player.coord.y, camera.smoother)
-        
-        for idx, bullet in pairs(game_data.bullet_list) do
-            bullet:update(dt)
-            if outOfBounds(bullet.coord) or bullet:dead() then
-                table.remove(game_data.bullet_list, idx)
-            end
-        end
-        local enemy_count = 0
-        for key, enemy in pairs(game_data.enemy_list) do
-            local result = enemy:update(dt) -- result not used
-            enemy_count = enemy_count + 1 -- count the number of enemies for debugging
-        end
-        game_data.enemies_alive = enemy_count -- update the number of enemies alive for debugging
+        camera:lockPosition(game_data.player.coord.x, game_data.player.coord.y, camera.smoother)
 
         for key, item in pairs(game_data.item_list) do
             item:update(dt)
         end
 
         -- updatee other odds and ends
-        checkCollisions()
+        checkMapCollisions()
         map_gameplay.spawner:update(dt)
         updateHud(dt)
         checkEndLevel(1)
+        map_gameplay:checkEvents()
     end
 
 end
@@ -66,16 +57,16 @@ function map_gameplay:draw()
 
     screen:apply(dt)
 
-    game_data.local_player:draw()
+    --game_data.player:draw()
 
     -- Draw the Enemies
     for index, enemy in pairs(game_data.enemy_list) do
-        enemy:draw()
+        --enemy:draw()
     end
 
     -- Draw the bullets
     for index, bullet in pairs(game_data.bullet_list) do
-        bullet:draw()
+        --bullet:draw()
     end
 
     -- Draw the items
@@ -106,6 +97,21 @@ function map_gameplay:draw()
 
 end
 
+function map_gameplay:checkEvents()
+    map_gameplay.events_list = {}
+    for _, trigger in pairs(map_gameplay.level_map.layers.triggers.objects) do
+        if trigger.properties.active == true then
+            if trigger.shape == "rectangle" then
+                if PointWithinRectangle(trigger.x, trigger.y, trigger.width, trigger.height, game_data.player:getX(), game_data.player:getY()) then
+                    print("Inside a Trigger ", trigger.properties.trigger_name)
+                    trigger.properties.active = false
+                    table.insert(map_gameplay.events_list, trigger.properties.trigger_name)
+                end
+            end
+        end
+    end
+end
+
 function map_gameplay:keypressed(key)
     if key == "e" then
         game_data.current_enemy_number = game_data.current_enemy_number + 1
@@ -124,7 +130,7 @@ function map_gameplay:keypressed(key)
     end
 
     if game_data.mode == "single" then
-        local result = game_data.local_player:keypressed(key)
+        local result = game_data.player:keypressed(key)
     end
 
     if key == "s" then
@@ -155,7 +161,7 @@ end
 
 function checkEndLevel(level_number)
 
-    if game_data.local_player:dead() then
+    if game_data.player:dead() then
         print("Player has died")
         Gamestate.switch(death_screen)
     end
@@ -173,35 +179,34 @@ function checkEndLevel(level_number)
 
 end
 
-function checkCollisions()
+function checkMapCollisions()
     local start_time_col = love.timer.getTime()
     local num_checks = 0
-    for idx_bullet, bullet in pairs(game_data.bullet_list) do
+    local bullet_list = map_gameplay.level_map.layers.bullet_layer.objects
+    for idx_bullet, bullet in pairs(bullet_list) do
         local bullet_x, bullet_y = bullet:getXY()
 
-        num_checks = num_checks + 1
-        if bullet.source ~= game_data.local_player then
-            if game_data.local_player.coord:distanceToPoint(bullet_x, bullet_y) < game_data.local_player.hitbox + bullet.size then
-                game_data.local_player:damage(bullet.damage)
-                screen:shake(20)
-                Sounds.hit_1:play()
-                game_data.bullet_list[idx_bullet] = nil
-            end 
-        end
-
-        for idx, enemy in pairs(game_data.enemy_list) do
+        local entity_list = map_gameplay.level_map.layers.sprite_layer.objects
+        for idx_entity, entity in pairs(entity_list) do
             num_checks = num_checks + 1
             -- there was a hit
-            if enemy.team ~= bullet.team and enemy.coord:distanceToPoint(bullet_x, bullet_y) < enemy.hitbox + bullet.size then
-                game_data.bullet_list[idx_bullet] = nil
+            print("collisions hit ", entity, bullet.team)
+            if entity.team ~= bullet.team and entity.coord:distanceToPoint(bullet_x, bullet_y) < entity.hitbox + bullet.size then
+                bullet_list[idx_bullet] = nil
+                -- there is a hit
+                
                 Sounds.hit_2:clone():play()
-                if enemy:damage(bullet.damage) then -- the bullet killed the enemy
-                    game_data.enemy_list[idx] = nil
-                    screen:shake(50)
-                    print("KILLLLEEDDD")
-                    game_data.level_score = game_data.level_score + enemy.difficulty
-                    game_data.level_kills = game_data.level_kills + 1
-                    table.insert(game_data.item_list, Item(enemy:getXY()))
+
+                if entity:damage(bullet.damage) then -- the bullet killed the enemy
+                    if entity == game_data.player then
+                        print("Platerere deado")
+                    else
+                        entity_list[idx_entity] = nil
+                        screen:shake(50)
+                        game_data.level_score = game_data.level_score + entity.difficulty
+                        game_data.level_kills = game_data.level_kills + 1
+                        table.insert(game_data.item_list, Item(entity:getXY()))
+                    end
                 end
             end
         end
@@ -210,7 +215,7 @@ function checkCollisions()
 
     for idx_item, item in pairs(game_data.item_list) do
         num_checks = num_checks + 1
-        if item.coord:distanceToCoord(game_data.local_player.coord) < item.size + game_data.local_player.size then
+        if item.coord:distanceToCoord(game_data.player.coord) < item.size + game_data.player.size then
             game_data.item_list[idx_item] = nil
             game_data.level_score = game_data.level_score + 1
             game_data.coins = game_data.coins + 1

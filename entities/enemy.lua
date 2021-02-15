@@ -26,7 +26,7 @@ function Enemy:update(dt)
 
     
 
-    self:followCoord(dt, game_data.local_player.coord)
+    self:followCoord(dt, game_data.player.coord)
     if self:fire() then return "fire" end
 end
 

@@ -1,7 +1,7 @@
 describe("Map Loading", function()
   -- tests go here
 require "utils.map_utils"
-Sti = require "lib.sti"
+Sti = require "sti"
 require "assets.resources"
 
 verifyMap(Maps.test_map)

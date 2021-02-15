@@ -1,4 +1,13 @@
 
+function setupMap(m, w)
+    assert(m, w)
+    verifyMap(m)
+    setupMapPhysics(m, w)
+    setupMapCallbacks(m)
+end   
+
+    
+
 function setupMapCallbacks(map, world)
   assert(map)
 
@@ -9,10 +18,29 @@ function setupMapCallbacks(map, world)
       end
   end
 
-
   function map.layers.sprite_layer:update(dt)
-      for _, sprite in pairs(self.objects) do
-        sprite:update(dt)
+    local sprite_count = 0
+    for _, sprite in pairs(self.objects) do
+      sprite:update(dt)
+      sprite_count = sprite_count + 1 -- count the number of enemies for debugging
+    end
+    game_data.sprites_alive = sprite_count -- update the number of enemies alive for debugging
+    --print("Avlice", game_data.sprites_alive)
+  end
+
+
+  function map.layers.bullet_layer:draw()
+      for _, bullet in pairs(self.objects) do
+        bullet:draw()
+      end
+  end
+
+  function map.layers.bullet_layer:update(dt)
+      for _, bullet in pairs(self.objects) do
+        bullet:update(dt)
+        if outOfBounds(bullet.coord) or bullet:dead() then
+          map.layers.bullet_layer.objects[_] = nil
+        end
       end
   end
 end
@@ -32,8 +60,14 @@ function verifyMap(map)
     print(spawn.x, spawn.y)
     assert(spawn.x)
     assert(spawn.y)
-    assert(spawn.properties.delay)
     assert(spawn.properties.type)
-    assert(spawn.z)
+  end
+
+  assert(map.layers.item_layer)
+  for key, item in pairs(map.layers.item_layer.objects) do
+    print(item.x, item.y)
+    assert(item.x)
+    assert(item.y)
+    assert(item.properties.type)
   end
 end

@@ -18,6 +18,7 @@ function Ship:new(x_start, y_start)
     self.pSystem = love.graphics.newParticleSystem(Sprites.particle_image, 255)
     self:setupParticleSystem()
     self.id = math.floor(love.math.random(5000))
+    self.map = nil
 end
 
 function Ship:update(dt)
@@ -61,7 +62,13 @@ function Ship:fire()
   if fire_result ~= nil then -- if we actually fired something
   for idx, tmp_bullet in pairs(fire_result) do -- loop through the bullet list we get back (if there are multiple)
     tmp_bullet:setTeamAndSource(self.team, self)
-    table.insert(game_data.bullet_list, tmp_bullet)
+    if self.map ~= nil then
+      table.insert(self.map.layers.bullet_layer.objects, tmp_bullet)
+    else
+      table.insert(game_data.bullet_list, tmp_bullet)
+      assert(false) -- we should never do this
+    end
+
   end
   return true -- if we were able to fire the weapon
   end
@@ -102,4 +109,13 @@ end
 
 function Ship:__tostring()
   return "Ship:" .. self.id .. ", pos: " .. self.coord:getX() .. ", " .. self.coord:getY()
+end
+
+-- Let's the ship know what map it will be using (if any)
+function Ship:setupMap(map)
+  self.map = map
+end
+
+function Ship:clearMap()
+  self.map = nil
 end

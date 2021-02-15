@@ -64,14 +64,14 @@ VERSION = "0.1" -- not used at all
 game_data = { -- where we store all global variables related to gameplay
     mode = "single",
     --client_list = {},
-    local_player = nil,
+    player = nil,
     score = 0,
     coins = 100,
     current_level = 1,
     --level_score = 0,
     enemy_list = {},
     current_enemy_number = 0,
-    enemies_alive = 0,
+    sprites_alive = 0,
     bullet_list = {},
     item_list = {},
     map_properties = {
@@ -105,25 +105,7 @@ local start_time = love.timer.getTime()
 FRAME_WIDTH, FRAME_HEIGHT = love.graphics.getDimensions()
 
 function love.load()
-    delta_t = 0
-    if game_data.mode == "single" then
-        game_data.local_player = Player(200, 200)
-    elseif game_data.mode == "online" then
-        -- Creating a server on any IP, port 22122
-        server = sock.newServer("192.168.0.10", 22122)
-        
-        -- Called when someone connects to the server
-        server:on("connect", onNewConnectionCallback)
-
-        server:on("update", onUpdateCallback)
-
-        server:on("bullet", onBulletCallback)
-
-        server:on("disconnect", function(data, client)
-            -- Send a message back to the connected client
-            local msg = "failed"
-        end)
-    end
+    game_data.player = Player(200, 200)
     camera = Camera(400,400)
     camera.smoother = Camera.smooth.damped(3)
     Gamestate.registerEvents()
