@@ -24,11 +24,11 @@
             "scaleInEditor": 1
         },
         "test_map.tmx": {
-            "scale": 0.7197,
-            "selectedLayer": 2,
+            "scale": 0.75,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 627.3447269695707,
-                "y": -385.5773238849521
+                "x": 1819.9999999999998,
+                "y": 394
             }
         },
         "tilesets/Map_tiles.tsx": {
